@@ -114,7 +114,7 @@ async function renderMessages(){
 }
 function connectSocket(){
  if(state.socket||!state.token||!window.io)return;
- state.socket=io(SOCKET_URL||undefined,{auth:{token:state.token}});
+ state.socket=io(SOCKET_URL,{transports:["polling","websocket"],auth:{token:state.token},reconnection:true});
  state.socket.on("message:new",msg=>{if(state.activeConversation&&Number(msg.conversation_id)===Number(state.activeConversation))loadMessages(state.activeConversation,true)});
 }
 async function startChat(userId){
