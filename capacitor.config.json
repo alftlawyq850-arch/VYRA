@@ -1,0 +1,8 @@
+{
+  "appId": "com.vyra.social",
+  "appName": "VYRA",
+  "webDir": "frontend",
+  "server": {
+    "androidScheme": "https"
+  }
+}
