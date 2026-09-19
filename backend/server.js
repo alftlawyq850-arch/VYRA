@@ -246,6 +246,6 @@ app.get("/api/users/search",auth,(req,res)=>{
 
 app.use("/uploads", express.static(uploadsDir));
 app.use(express.static(path.join(__dirname,"../frontend")));
-app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"../frontend/index.html")));
+app.use((req,res)=>res.sendFile(path.join(__dirname,"../frontend/index.html")));
 
 httpServer.listen(PORT,()=>console.log(`VYRA API running on http://localhost:${PORT}`));
