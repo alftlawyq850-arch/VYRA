@@ -187,7 +187,7 @@ app.get("/api/conversations/:id/messages",auth,(req,res)=>{
   const cid=Number(req.params.id);
   if(!isMember(cid,req.user.id)) return res.status(403).json({error:"لا تملك صلاحية هذه المحادثة"});
   res.json(db.prepare(`
-    SELECT m.id,m.text,m.created_at,m.sender_id,u.name,u.username
+    SELECT m.id,m.conversation_id,m.text,m.created_at,m.sender_id,u.name,u.username
     FROM messages m JOIN users u ON u.id=m.sender_id
     WHERE m.conversation_id=? ORDER BY m.id ASC LIMIT 200`).all(cid));
 });
@@ -197,7 +197,7 @@ app.post("/api/conversations/:id/messages",auth,(req,res)=>{
   if(!isMember(cid,req.user.id)) return res.status(403).json({error:"لا تملك صلاحية هذه المحادثة"});
   if(!text) return res.status(400).json({error:"الرسالة فارغة"});
   const info=db.prepare("INSERT INTO messages(conversation_id,sender_id,text) VALUES(?,?,?)").run(cid,req.user.id,text);
-  const msg=db.prepare(`SELECT m.id,m.text,m.created_at,m.sender_id,u.name,u.username FROM messages m JOIN users u ON u.id=m.sender_id WHERE m.id=?`).get(info.lastInsertRowid);
+  const msg=db.prepare(`SELECT m.id,m.conversation_id,m.text,m.created_at,m.sender_id,u.name,u.username FROM messages m JOIN users u ON u.id=m.sender_id WHERE m.id=?`).get(info.lastInsertRowid);
   io.to("conversation:"+cid).emit("message:new",msg);
   res.status(201).json(msg);
 });
