@@ -208,6 +208,7 @@ io.use((socket,next)=>{
   socket.user=user; next();
 });
 io.on("connection",socket=>{
+  const rooms=db.prepare("SELECT conversation_id FROM conversation_members WHERE user_id=?").all(socket.user.id); rooms.forEach(r=>socket.join("conversation:"+r.conversation_id));
   socket.on("conversation:join",cid=>{
     if(isMember(Number(cid),socket.user.id)) socket.join("conversation:"+Number(cid));
   });
