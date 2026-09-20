@@ -208,6 +208,7 @@ io.use((socket,next)=>{
   socket.user=user; next();
 });
 io.on("connection",socket=>{
+  console.log("SOCKET CONNECTED user:",socket.user.id,"socket:",socket.id); socket.on("disconnect",reason=>console.log("SOCKET DISCONNECTED user:",socket.user.id,"reason:",reason));
   const rooms=db.prepare("SELECT conversation_id FROM conversation_members WHERE user_id=?").all(socket.user.id); rooms.forEach(r=>socket.join("conversation:"+r.conversation_id));
   socket.on("conversation:join",cid=>{
     if(isMember(Number(cid),socket.user.id)) socket.join("conversation:"+Number(cid));
