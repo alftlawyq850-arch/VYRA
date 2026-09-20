@@ -115,6 +115,7 @@ async function renderMessages(){
 function connectSocket(){
  if(state.socket||!state.token||!window.io)return;
  state.socket=io(SOCKET_URL,{transports:["polling","websocket"],auth:{token:state.token},reconnection:true});
+  state.socket.on("connect",()=>console.log("VYRA SOCKET CONNECTED",state.socket.id)); state.socket.on("connect_error",e=>console.error("VYRA SOCKET ERROR",e.message));
  state.socket.on("message:new",msg=>{if(state.activeConversation)loadMessages(state.activeConversation,true)});
 }
 async function startChat(userId){
